@@ -3,7 +3,8 @@ import { Task } from '@lit/task';
 // eslint-disable-next-line no-unused-vars
 import BaselineIcon from '../libs/baseline-status/baseline-icon.js';
 import { ICONS, SUPPORT_ICONS } from '../libs/baseline-status/browser-icons.js';
-import { messages } from './Messages';
+// import { statusTypes, implemimplementationTypesentationStatusTypes } from './Types';
+import { transformToBaselineObject } from './Utils';
 
 export class DokaBaseline extends LitElement {
     static styles = css`
@@ -37,37 +38,8 @@ export class DokaBaseline extends LitElement {
         args: () => [this.groupId],
     });
 
-    getDescription(supportStatus, baselineDate) {
-        const { fullDate } = baselineDate;
-
-        const description = messages[supportStatus].description;
-
-        if (fullDate) {
-            return `${description}. Дата: ${fullDate}`;
-        }
-        return description;
-    }
-
-    getBaselineDate(baseline) {
-        const lowDateStr = baseline.low_date;
-        const highDateStr = baseline.high_date;
-
-        const dateStr = highDateStr ?? lowDateStr;
-
-        const year = dateStr ? dateStr.split('-')[0] : '';
-        return {
-            fullDate: dateStr
-                ? new Intl.DateTimeFormat('ru-RU', {
-                      year: 'numeric',
-                      month: 'long',
-                  }).format(new Date(dateStr))
-                : '',
-            year,
-        };
-    }
-
-    renderStatusInfo(title) {
-        return html`<span class="baseline-badge">${title}</span>`;
+    renderBadge(badge) {
+        return html`<span class="baseline-badge">${badge}</span>`;
     }
 
     renderSupport(implementationId, support = 'unavailable') {
@@ -84,7 +56,8 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
-    renderImplementationsInfo(supportStatus, implementations) {
+    renderImplementationsInfo(baselineObj) {
+        const { supportStatus, implementations } = baselineObj;
         const { chrome, edge, firefox, safari } = implementations;
 
         return html`
@@ -115,8 +88,8 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
-    renderDescription(supportStatus, baselineDate, featureId) {
-        const description = this.getDescription(supportStatus, baselineDate);
+    renderDescription(baselineObj) {
+        const { supportStatus, description, id } = baselineObj;
 
         return html`
             <p>${description}</p>
@@ -124,58 +97,21 @@ export class DokaBaseline extends LitElement {
                 ${supportStatus === 'no_data'
                     ? ''
                     : html`<a
-                          href="https://web-platform-dx.github.io/web-features-explorer/features/${featureId}/"
+                          href="https://web-platform-dx.github.io/web-features-explorer/features/${id}/"
                           target="_top"
                           >Learn more</a
                       >`}
             </p>
         `;
     }
-    renderTemplate(featureData) {
-        const {
-            name,
-            baseline,
-            browser_implementations: implementations = {},
-            feature_id: featureId,
-        } = featureData;
 
-        console.log(':', featureData);
+    renderBaseline(baselineObj) {
+        if (baselineObj === null) {
+            return null;
+        }
 
-        const supportStatus = baseline.status || 'no_data';
-
-        // const preTitle = (baseline === 'limited' || baseline === 'no_data')
-        //     ? ''
-        //     : html`<strong>Baseline</strong> `;
-
-        const title = messages[supportStatus].title;
-
-        const baselineDate = this.getBaselineDate(baseline);
-
-        // const getAriaLabel = (
-        //     title,
-        //     year,
-        //     badge,
-        //     chrome = 'no',
-        //     edge = 'no',
-        //     firefox = 'no',
-        //     safari = 'no',
-        // ) => {
-        //     if (title === 'Unknown availability') {
-        //     chrome = edge = firefox = safari = 'unknown';
-        //     }
-        //     return `Baseline: ${title}${year ? ` ${year}` : ''}${badge ? ` (newly available)` : ''}. Supported in Chrome: ${chrome === 'available' ? 'yes' : chrome}. Supported in Edge: ${edge === 'available' ? 'yes' : edge}. Supported in Firefox: ${firefox === 'available' ? 'yes' : firefox}. Supported in Safari: ${safari === 'available' ? 'yes' : safari}.`;
-        // };
-
-        //     <summary
-        //     //   aria-label="${getAriaLabel(
-        //     //     title,
-        //     //     year,
-        //     //     badge,
-        //     //     chrome?.status,
-        //     //     edge?.status,
-        //     //     firefox?.status,
-        //     //     safari?.status,
-        //     //   )}"
+        console.log(':', baselineObj);
+        const { name, badge, ariaLabel, supportStatus } = baselineObj;
         //     // >
         //       <div class="baseline-status-title" aria-hidden="true">
         //         <div>${preTitle} ${title} ${year} ${badge}</div>
@@ -192,24 +128,17 @@ export class DokaBaseline extends LitElement {
         return html`
             <div class="name">${name}</div>
             <details>
-                <summary>
+                <summary aria-label="${ariaLabel}">
                     <baseline-icon
                         support="${supportStatus}"
                         aria-hidden="true"
                     ></baseline-icon>
                     <div class="status" aria-hidden="true">
-                        ${this.renderStatusInfo(title)}
-                        ${this.renderImplementationsInfo(
-                            supportStatus,
-                            implementations,
-                        )}
+                        ${this.renderBadge(badge)}
+                        ${this.renderImplementationsInfo(baselineObj)}
                     </div>
                 </summary>
-                ${this.renderDescription(
-                    supportStatus,
-                    baselineDate,
-                    featureId,
-                )}
+                ${this.renderDescription(baselineObj)}
             </details>
             <div></div>
         `;
@@ -221,11 +150,10 @@ export class DokaBaseline extends LitElement {
         }
         return this.fetchData.render({
             pending: () => null, // this.renderTemplate(missingFeature, true)
-            complete: featureData => {
-                if (!featureData || !featureData.baseline) {
-                    return null; // this.renderTemplate(missingFeature);
-                }
-                return this.renderTemplate(featureData);
+            complete: responseData => {
+                const baselineObj = transformToBaselineObject(responseData);
+
+                return this.renderBaseline(baselineObj);
             },
             error: () => null, // this.renderTemplate(missingFeature),
         });

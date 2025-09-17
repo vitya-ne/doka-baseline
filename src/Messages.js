@@ -1,26 +1,38 @@
 export const messages = {
     limited: {
-        title: 'Limited availability',
+        badge: 'Limited availability',
         description:
-            'This feature is not Baseline because it does not work in some of the most widely-used browsers.',
+            'This feature is not Baseline because it does not work in some of the most widely-used browsers',
     },
     newly: {
-        title: 'Newly available',
+        badge: 'Newly available',
         description:
-            'This feature works across the latest devices and browser versions. This feature might not work in older devices or browsers.',
+            'This feature works across the latest devices and browser versions. This feature might not work in older devices or browsers',
     },
     widely: {
-        title: 'Widely available',
+        badge: 'Widely available',
         description:
-            'This feature is well established and works across many devices and browser versions.',
-    },
-    loading: {
-        title: 'Loading',
-        description: '',
+            'This feature is well established and works across many devices and browser versions',
     },
     no_data: {
-        title: 'Unknown availability',
+        badge: 'Unknown availability',
         description:
-            'We currently don`t have browser support information about this feature.',
+            'We currently don`t have browser support information about this feature',
     },
+    // loading: {
+    //     badge: 'Loading',
+    //     description: '',
+    // },
+    supportedInChrome: 'Supported in Chrome',
+    supportedInEdge: 'Supported in Edge',
+    supportedInFirefox: 'Supported in Firefox',
+    supportedInSafari: 'Supported in Safari',
+
+    supportedStatus: {
+        available: 'yes',
+        unavailable: 'no',
+        unknown: 'unknown',
+    },
+
+    date: 'Date',
 };
