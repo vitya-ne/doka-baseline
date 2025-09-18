@@ -1,9 +1,9 @@
 import { html, css, LitElement } from 'lit';
 import { Task } from '@lit/task';
 // eslint-disable-next-line no-unused-vars
-import BaselineIcon from '../libs/baseline-status/baseline-icon.js';
-import { ICONS, SUPPORT_ICONS } from '../libs/baseline-status/browser-icons.js';
-// import { statusTypes, implemimplementationTypesentationStatusTypes } from './Types';
+import BaselineIcon from '../libs/baseline-status/baseline-icon';
+import { ICONS as BROWSER_ICONS } from '../libs/baseline-status/browser-icons';
+import { SUPPORT_ICONS } from '../libs/baseline-status/support-icons';
 import { transformToBaselineObject } from './Utils';
 
 export class DokaBaseline extends LitElement {
@@ -42,48 +42,27 @@ export class DokaBaseline extends LitElement {
         return html`<span class="baseline-badge">${badge}</span>`;
     }
 
-    renderSupport(implementationId, support = 'unavailable') {
-        const supportKey =
-            support === 'newly' || support === 'widely' ? 'available' : support;
-
+    renderBrowserSupport(implementationId, status = 'unavailable') {
         return html`
             <span>
-                ${ICONS[implementationId]}
-                <browser-support-icon class="support-${support}">
-                    ${SUPPORT_ICONS[supportKey]}
+                ${BROWSER_ICONS[implementationId]}
+                <browser-support-icon class="support-${status}">
+                    ${SUPPORT_ICONS[status]}
                 </browser-support-icon>
             </span>
         `;
     }
 
     renderImplementationsInfo(baselineObj) {
-        const { supportStatus, implementations } = baselineObj;
+        const { implementations } = baselineObj;
         const { chrome, edge, firefox, safari } = implementations;
 
         return html`
             <div class="browsers">
-                ${this.renderSupport(
-                    'chrome',
-                    supportStatus === 'limited'
-                        ? chrome?.status
-                        : supportStatus,
-                )}
-                ${this.renderSupport(
-                    'edge',
-                    supportStatus === 'limited' ? edge?.status : supportStatus,
-                )}
-                ${this.renderSupport(
-                    'firefox',
-                    supportStatus === 'limited'
-                        ? firefox?.status
-                        : supportStatus,
-                )}
-                ${this.renderSupport(
-                    'safari',
-                    supportStatus === 'limited'
-                        ? safari?.status
-                        : supportStatus,
-                )}
+                ${this.renderBrowserSupport('chrome', chrome?.status)}
+                ${this.renderBrowserSupport('edge', edge?.status)}
+                ${this.renderBrowserSupport('firefox', firefox?.status)}
+                ${this.renderBrowserSupport('safari', safari?.status)}
             </div>
         `;
     }
@@ -110,7 +89,6 @@ export class DokaBaseline extends LitElement {
             return null;
         }
 
-        console.log(':', baselineObj);
         const { name, badge, ariaLabel, supportStatus } = baselineObj;
         //     // >
         //       <div class="baseline-status-title" aria-hidden="true">
@@ -124,6 +102,12 @@ export class DokaBaseline extends LitElement {
         //         <path d="M5.5 6.45356L0.25 1.20356L1.19063 0.262939L5.5 4.59419L9.80937 0.284814L10.75 1.22544L5.5 6.45356Z" fill="currentColor"/>
         //       </svg>
         //     </span>
+        console.log('renderBaseline:', {
+            name,
+            badge,
+            ariaLabel,
+            supportStatus,
+        });
 
         return html`
             <div class="name">${name}</div>
@@ -155,7 +139,10 @@ export class DokaBaseline extends LitElement {
 
                 return this.renderBaseline(baselineObj);
             },
-            error: () => null, // this.renderTemplate(missingFeature),
+            error: () => {
+                const emptyBaselineObj = transformToBaselineObject();
+                return this.renderBaseline(emptyBaselineObj);
+            },
         });
     }
 }

@@ -31,8 +31,8 @@ export const messages = {
     supportedStatus: {
         available: 'yes',
         unavailable: 'no',
-        unknown: 'unknown',
+        no_data: 'unknown',
     },
-
+    unknownName: 'Unknown feature',
     date: 'Date',
 };
