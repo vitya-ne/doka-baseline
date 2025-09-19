@@ -2,6 +2,7 @@ import {
     statusTypes,
     implementationTypes,
     implementationStatusTypes,
+    browserNameList,
 } from './Types';
 import { messages } from './Messages';
 
@@ -9,40 +10,42 @@ const DEFAULT = {
     implementation: implementationTypes.NOT_SUPPORTED,
 };
 
+const getBrowserImplementationList = (
+    implementations,
+    defaultData = DEFAULT.implementation,
+) => {
+    return browserNameList.map(browserName => ({
+        id: browserName,
+        data: implementations?.[browserName] ?? defaultData,
+    }));
+};
+
 const EMPTY_BASELINE_OBJ = {
     name: messages.unknownName,
     badge: messages.no_data.badge,
     supportStatus: statusTypes.NO_DATA,
-    implementations: {
-        chrome: implementationTypes.UNKNOWN,
-        edge: implementationTypes.UNKNOWN,
-        firefox: implementationTypes.UNKNOWN,
-        safari: implementationTypes.UNKNOWN,
-    },
+    implementations: getBrowserImplementationList(
+        null,
+        implementationTypes.UNKNOWN,
+    ),
 };
 
-const getAriaLabel = data => {
-    const { badge, supportStatus, implementations, dates } = data;
+const getAriaLabel = obj => {
+    const { badge, supportStatus, implementations, dates } = obj;
 
-    let chrome = implementations.chrome.status;
-    let edge = implementations.edge.status;
-    let firefox = implementations.firefox.status;
-    let safari = implementations.safari.status;
+    const statuses = implementations.map(browser => browser.data.status);
 
     if (supportStatus === statusTypes.NO_DATA) {
-        chrome = implementationStatusTypes.UNKNOWN;
-        edge = implementationStatusTypes.UNKNOWN;
-        firefox = implementationStatusTypes.UNKNOWN;
-        safari = implementationStatusTypes.UNKNOWN;
+        statuses.fill(implementationStatusTypes.UNKNOWN);
     }
 
     const labelPar1 = [badge, dates?.year].filter(Boolean).join(' ');
-    const labelPart2 = [
-        `${messages.supportedInChrome}: ${messages.supportedStatus[chrome]}.`,
-        `${messages.supportedInEdge}: ${messages.supportedStatus[edge]}.`,
-        `${messages.supportedInFirefox}: ${messages.supportedStatus[firefox]}.`,
-        `${messages.supportedInSafari}: ${messages.supportedStatus[safari]}.'`,
-    ].join(' ');
+    const labelPart2 = implementations
+        .map((browser, index) => {
+            const id = browser.id;
+            return `${messages.supported[id]}: ${messages.supportedStatus[statuses[index]]}.`;
+        })
+        .join(' ');
 
     return `${labelPar1 ? `${labelPar1}. ` : ''}${labelPart2}`;
 };
@@ -76,14 +79,12 @@ const getBaselineDates = baseline => {
     };
 };
 
-const getEmptyBaselineObj = sourceData => {
+const getEmptyBaselineObject = sourceData => {
     const data = {
         ...EMPTY_BASELINE_OBJ,
         ...(sourceData?.feature_id && { name: sourceData.feature_id }),
         description: getDescription(EMPTY_BASELINE_OBJ.supportStatus),
     };
-
-    console.log('getEmptyBaselineObj:', data, getAriaLabel(data));
 
     return {
         ...data,
@@ -93,7 +94,7 @@ const getEmptyBaselineObj = sourceData => {
 
 export const transformToBaselineObject = responseData => {
     if (!responseData || !responseData.baseline) {
-        return getEmptyBaselineObj(responseData);
+        return getEmptyBaselineObject(responseData);
     }
 
     const {
@@ -113,12 +114,7 @@ export const transformToBaselineObject = responseData => {
         badge,
         id,
         supportStatus,
-        implementations: {
-            chrome: implementations.chrome ?? DEFAULT.implementation,
-            edge: implementations.edge ?? DEFAULT.implementation,
-            firefox: implementations.firefox ?? DEFAULT.implementation,
-            safari: implementations.safari ?? DEFAULT.implementation,
-        },
+        implementations: getBrowserImplementationList(implementations),
         dates,
         description,
     };

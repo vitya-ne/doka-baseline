@@ -23,10 +23,12 @@ export const messages = {
     //     badge: 'Loading',
     //     description: '',
     // },
-    supportedInChrome: 'Supported in Chrome',
-    supportedInEdge: 'Supported in Edge',
-    supportedInFirefox: 'Supported in Firefox',
-    supportedInSafari: 'Supported in Safari',
+    supported: {
+        chrome: 'Supported in Chrome',
+        edge: 'Supported in Edge',
+        firefox: 'Supported in Firefox',
+        safari: 'Supported in Safari',
+    },
 
     supportedStatus: {
         available: 'yes',

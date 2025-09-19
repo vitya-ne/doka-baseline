@@ -42,27 +42,30 @@ export class DokaBaseline extends LitElement {
         return html`<span class="baseline-badge">${badge}</span>`;
     }
 
-    renderBrowserSupport(implementationId, status = 'unavailable') {
+    renderBrowserSupport(browser) {
+        const { id, data } = browser;
+        const { status = 'unavailable', version } = data;
         return html`
-            <span>
-                ${BROWSER_ICONS[implementationId]}
+            <span class="browser-support">
+                ${BROWSER_ICONS[id]}
                 <browser-support-icon class="support-${status}">
                     ${SUPPORT_ICONS[status]}
                 </browser-support-icon>
+                ${version
+                    ? html`<span class="browser-version">${version}</span>`
+                    : ''}
             </span>
         `;
     }
 
     renderImplementationsInfo(baselineObj) {
         const { implementations } = baselineObj;
-        const { chrome, edge, firefox, safari } = implementations;
 
         return html`
             <div class="browsers">
-                ${this.renderBrowserSupport('chrome', chrome?.status)}
-                ${this.renderBrowserSupport('edge', edge?.status)}
-                ${this.renderBrowserSupport('firefox', firefox?.status)}
-                ${this.renderBrowserSupport('safari', safari?.status)}
+                ${implementations.map(browser =>
+                    this.renderBrowserSupport(browser),
+                )}
             </div>
         `;
     }

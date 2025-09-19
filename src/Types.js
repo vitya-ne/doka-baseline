@@ -13,3 +13,5 @@ export const implementationTypes = {
     NOT_SUPPORTED: { status: implementationStatusTypes.NO },
     UNKNOWN: { status: implementationStatusTypes.UNKNOWN },
 };
+
+export const browserNameList = ['chrome', 'edge', 'firefox', 'safari'];
