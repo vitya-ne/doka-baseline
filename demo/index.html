@@ -8,17 +8,44 @@
         />
         <script type="module" src="../doka-baseline.js"></script>
         <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            /* html {
+                color-scheme: dark;
+            } */
+
             body {
-                background: #fafafa;
+                min-height: 100vh;
+                margin: 0;
+                padding: 50px;
+
+                /* background-color: #18191c;
+                color: #ffffff; */
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .container {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            doka-baseline {
+                flex: 1 1 100%;
+                width: 100%;
             }
         </style>
     </head>
     <body>
-        <div id="demo"></div>
-
-        <doka-baseline groupId="text-justify"></doka-baseline>
-        <doka-baseline groupId="text-wrap"></doka-baseline>
-        <doka-baseline groupId="container-queries"></doka-baseline>
-        <doka-baseline groupId="unknown"></doka-baseline>
+        <div class="container">
+            <doka-baseline groupId="text-justify"></doka-baseline>
+            <doka-baseline groupId="text-wrap"></doka-baseline>
+            <doka-baseline groupId="container-queries"></doka-baseline>
+            <doka-baseline groupId="unknown"></doka-baseline>
+        </div>
     </body>
 </html>
