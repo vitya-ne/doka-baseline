@@ -117,6 +117,7 @@ export const transformToBaselineObject = responseData => {
         implementations: getBrowserImplementationList(implementations),
         dates,
         description,
+        showYear: supportStatus === statusTypes.NEWLY && dates.year !== '',
     };
 
     console.log(':', { responseData, data });

@@ -1,4 +1,7 @@
 export const statusTypes = {
+    LIMITED: 'limited',
+    NEWLY: 'newly',
+    WIDELY: 'widely',
     NO_DATA: 'no_data',
 };
 

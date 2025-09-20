@@ -15,29 +15,37 @@ export class DokaBaseline extends LitElement {
                 --doka-baseline-color-widely: light-dark(#1e8e3e, #1ea446);
                 --doka-baseline-color-no_data: light-dark(#707070, #909090);
 
-                --doka-baseline-bgcolor-limited: light-dark(#ea8600, #f09418);
-                --doka-baseline-bgcolor-newly: light-dark(#1a73e8, #1b6ef3);
-                --doka-baseline-bgcolor-widely: light-dark(#1e8e3e, #1ea446);
+                --doka-baseline-bgcolor-limited: light-dark(
+                    #ea860024,
+                    #f0941812
+                );
+                --doka-baseline-bgcolor-newly: light-dark(#1a73e824, #1b6ef312);
+                --doka-baseline-bgcolor-widely: light-dark(
+                    #1e8e3e24,
+                    #1ea44612
+                );
 
                 --doka-baseline-color-border: light-dark(#d9d9d9, #808080);
 
                 display: block;
                 max-width: 800px;
-
-                // color: var(--doka-baseline-text-color, #000);
             }
 
             .doka-baseline {
-                padding: 8px 24px;
+                padding: 0 16px;
                 font-family: inherit;
                 font-size: 14px;
                 font-style: normal;
-                border: solid 1px var(--doka-baseline-color-border);
                 border-radius: 8px;
             }
 
+            .doka-baseline.with-name {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
             .doka-baseline.limited {
-                // background-color: hsl(var(--doka-baseline-color-limited) / 0.3);
+                background: var(--doka-baseline-bgcolor-limited);
 
                 .badge {
                     background: var(--doka-baseline-color-limited);
@@ -45,14 +53,18 @@ export class DokaBaseline extends LitElement {
             }
 
             .doka-baseline.newly {
+                background: var(--doka-baseline-bgcolor-newly);
+
                 .badge {
-                    background: var(--doka-baseline-color-widely);
+                    background: var(--doka-baseline-color-newly);
                 }
             }
 
             .doka-baseline.widely {
+                background: var(--doka-baseline-bgcolor-widely);
+
                 .badge {
-                    background: var(--doka-baseline-color-newly);
+                    background: var(--doka-baseline-color-widely);
                 }
             }
 
@@ -60,6 +72,7 @@ export class DokaBaseline extends LitElement {
                 .badge {
                     background: var(--doka-baseline-color-no_data);
                 }
+                border: solid 1px var(--doka-baseline-color-border);
             }
 
             // a,
@@ -72,59 +85,59 @@ export class DokaBaseline extends LitElement {
                 font-weight: normal;
                 font-size: 20px;
                 margin: 0;
-            }
-
-            ::slotted(*) {
-                color: grey;
-                font-style: italic;
-                font-size: 80%;
+                padding-top: 8px;
             }
 
             .status-container {
-                gap: 1rem;
                 display: flex;
                 flex-wrap: wrap;
+                align-items: center;
                 justify-content: space-between;
                 flex: 1;
+                gap: 1rem;
             }
 
-            .status-container div:first-child {
+            .status-title {
                 display: flex;
                 align-items: center;
-                gap: 0.2rem;
-                line-height: normal;
+                white-space: nowrap;
+                gap: 0.5rem;
+                font-weight: bold;
             }
 
             .badge {
-                background: #3367d6;
-                color: #fff;
-                font-size: 11px;
-                padding: 0 4px;
-                border-radius: 2px;
+                padding: 0 0.5rem;
+                line-height: 2;
                 text-transform: uppercase;
-                line-height: 20px;
-                margin-inline: 0.5rem;
-                white-space: nowrap;
+                font-size: 12px;
+                border-radius: 2px;
+                color: #fff;
             }
 
-            .doka-baseline-browsers {
-                font-size: 0;
-                max-width: 200px;
+            .browsers {
                 display: flex;
                 gap: 16px;
+                max-width: 200px;
+                font-size: 0;
             }
 
-            .doka-baseline-browsers .browser-support {
+            .browsers .browser-support {
                 white-space: nowrap;
             }
 
-            .support-newly {
-                color: var(--doka-baseline-color-newly);
+            .browser-support > svg:first-child {
+                position: relative;
             }
 
             .support-widely,
             .support-available {
                 color: var(--doka-baseline-color-widely);
+            }
+
+            .browsers.newly {
+                .support-available {
+                    color: var(--doka-baseline-color-newly);
+                }
             }
 
             .support-unavailable {
@@ -135,26 +148,42 @@ export class DokaBaseline extends LitElement {
                 color: var(--doka-baseline-color-no_data);
             }
 
+            .browser-version {
+                visibility: hidden;
+                position: absolute;
+                display: block;
+                margin: 0 auto;
+                font-size: 12px;
+            }
+
+            .doka-baseline:hover {
+                .browser-version {
+                    visibility: visible;
+                }
+            }
+
             summary {
                 display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                padding: 16px 0;
                 cursor: pointer;
                 font-size: 16px;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 16px;
-                justify-content: space-between;
-                padding: 16px 0;
             }
         `;
     }
 
     static properties = {
         groupId: { type: String },
+        showName: { type: String },
     };
 
     constructor() {
         super();
         this.groupId = '';
+        this.showName = 'false';
     }
 
     fetchData = new Task(this, {
@@ -171,13 +200,21 @@ export class DokaBaseline extends LitElement {
         args: () => [this.groupId],
     });
 
-    renderBadge(badge) {
-        return html`<div class="badge">${badge}</span>`;
+    renderStatusTitle(baselineObj) {
+        const { badge, dates, showYear } = baselineObj;
+        return html`
+            <div class="status-title">
+                <span class="badge">${badge}</span>${showYear
+                    ? `${dates.year}`
+                    : ''}
+            </div>
+        `;
     }
 
     renderBrowserSupport(browser) {
         const { id, data } = browser;
         const { status = 'unavailable', version } = data;
+
         return html`
             <span class="browser-support">
                 ${BROWSER_ICONS[id]}
@@ -192,10 +229,10 @@ export class DokaBaseline extends LitElement {
     }
 
     renderImplementationsInfo(baselineObj) {
-        const { implementations } = baselineObj;
+        const { implementations, supportStatus } = baselineObj;
 
         return html`
-            <div class="doka-baseline-browsers">
+            <div class="browsers ${supportStatus}">
                 ${implementations.map(browser =>
                     this.renderBrowserSupport(browser),
                 )}
@@ -220,34 +257,31 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
+    renderName(name) {
+        if (this.showName === 'true') {
+            return html`<div class="name">${name}</div>`;
+        }
+        return null;
+    }
+
     renderBaseline(baselineObj) {
         if (baselineObj === null) {
             return null;
         }
 
-        const { name, badge, ariaLabel, supportStatus } = baselineObj;
-        //     // >
-        //       <div class="baseline-status-title" aria-hidden="true">
-        //         <div>${preTitle} ${title} ${year} ${badge}</div>
-
-        //       </div>
-        //     </div>
+        const { name, ariaLabel, supportStatus } = baselineObj;
 
         //     <span class="open-icon" aria-hidden="true">
         //       <svg xmlns="http://www.w3.org/2000/svg" width="11" height="7" viewBox="0 0 11 7" fill="none">
         //         <path d="M5.5 6.45356L0.25 1.20356L1.19063 0.262939L5.5 4.59419L9.80937 0.284814L10.75 1.22544L5.5 6.45356Z" fill="currentColor"/>
         //       </svg>
         //     </span>
-        console.log('renderBaseline:', {
-            name,
-            badge,
-            ariaLabel,
-            supportStatus,
-        });
+
+        const mainClass = `doka-baseline ${supportStatus}${this.showName === 'true' ? ' with-name' : ''}`;
 
         return html`
-            <div class="doka-baseline ${supportStatus}">
-                <div class="name">${name}</div>
+            <div class=${mainClass}>
+                ${this.renderName(name)}
                 <details>
                     <summary aria-label="${ariaLabel}">
                         <baseline-icon
@@ -255,7 +289,7 @@ export class DokaBaseline extends LitElement {
                             aria-hidden="true"
                         ></baseline-icon>
                         <div class="status-container" aria-hidden="true">
-                            ${this.renderBadge(badge)}
+                            ${this.renderStatusTitle(baselineObj)}
                             ${this.renderImplementationsInfo(baselineObj)}
                         </div>
                     </summary>
@@ -270,6 +304,7 @@ export class DokaBaseline extends LitElement {
         if (!this.groupId) {
             return null;
         }
+
         return this.fetchData.render({
             pending: () => null, // this.renderTemplate(missingFeature, true)
             complete: responseData => {

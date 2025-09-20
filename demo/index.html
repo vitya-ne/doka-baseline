@@ -30,22 +30,39 @@
 
             .container {
                 display: flex;
-                gap: 1rem;
+                gap: 2rem;
                 flex-wrap: wrap;
             }
 
-            doka-baseline {
+            .item {
                 flex: 1 1 100%;
                 width: 100%;
+            }
+            doka-baseline {
+                margin-top: 0.5rem;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <doka-baseline groupId="text-justify"></doka-baseline>
-            <doka-baseline groupId="text-wrap"></doka-baseline>
-            <doka-baseline groupId="container-queries"></doka-baseline>
-            <doka-baseline groupId="unknown"></doka-baseline>
+            <div class="item">
+                text-justify
+                <doka-baseline groupId="text-justify"></doka-baseline>
+            </div>
+            <div class="item">
+                text-wrap
+                <doka-baseline groupId="text-wrap"></doka-baseline>
+            </div>
+            <div class="item">
+                container-queries
+                <doka-baseline groupId="container-queries"></doka-baseline>
+            </div>
+            <div class="item">
+                <doka-baseline
+                    groupId="unknown"
+                    showName="true"
+                ></doka-baseline>
+            </div>
         </div>
     </body>
 </html>
