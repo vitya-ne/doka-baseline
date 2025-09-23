@@ -28,7 +28,7 @@ export class DokaBaseline extends LitElement {
                 --doka-baseline-color-border: light-dark(#d9d9d9, #808080);
 
                 display: block;
-                max-width: 800px;
+                max-width: 1200px;
             }
 
             .doka-baseline {
@@ -110,7 +110,7 @@ export class DokaBaseline extends LitElement {
                 line-height: 2;
                 text-transform: uppercase;
                 font-size: 12px;
-                border-radius: 2px;
+                border-radius: 4px;
                 color: #fff;
             }
 
@@ -123,9 +123,6 @@ export class DokaBaseline extends LitElement {
 
             .browsers .browser-support {
                 white-space: nowrap;
-            }
-
-            .browser-support > svg:first-child {
                 position: relative;
             }
 
@@ -151,9 +148,10 @@ export class DokaBaseline extends LitElement {
             .browser-version {
                 visibility: hidden;
                 position: absolute;
-                display: block;
-                margin: 0 auto;
-                font-size: 12px;
+                width: 50%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
             }
 
             .doka-baseline:hover {
@@ -222,7 +220,7 @@ export class DokaBaseline extends LitElement {
                     ${SUPPORT_ICONS[status]}
                 </browser-support-icon>
                 ${version
-                    ? html`<span class="browser-version">${version}</span>`
+                    ? html`<div class="browser-version">${version}</div>`
                     : ''}
             </span>
         `;
