@@ -4,7 +4,7 @@ import {
     implementationStatusTypes,
     browserNameList,
 } from './Types';
-import { messages } from './Messages';
+import { messages } from './locales/ru/Messages.ru';
 
 const DEFAULT = {
     implementation: implementationTypes.NOT_SUPPORTED,
@@ -50,15 +50,22 @@ const getAriaLabel = obj => {
     return `${labelPar1 ? `${labelPar1}. ` : ''}${labelPart2}`;
 };
 
-const getDescription = (supportStatus, dates = {}) => {
+const getDescription = obj => {
+    const { supportStatus, dates = {}, id } = obj;
     const { fullDate } = dates;
 
-    const description = messages[supportStatus].description;
+    const result = {
+        text: `${messages[supportStatus].description}.`,
+        ...(fullDate && {
+            date: `${messages.date}: ${fullDate}`,
+        }),
+        ...(supportStatus !== statusTypes.NO_DATA && {
+            featureLink: `https://web-platform-dx.github.io/web-features-explorer/features/${id}/`,
+            featureLinkText: messages.featureLinkText,
+        }),
+    };
 
-    if (fullDate) {
-        return `${description}. ${messages.date}: ${fullDate}`;
-    }
-    return description;
+    return result;
 };
 
 const getBaselineDates = baseline => {
@@ -83,7 +90,7 @@ const getEmptyBaselineObject = sourceData => {
     const data = {
         ...EMPTY_BASELINE_OBJ,
         ...(sourceData?.feature_id && { name: sourceData.feature_id }),
-        description: getDescription(EMPTY_BASELINE_OBJ.supportStatus),
+        description: getDescription(EMPTY_BASELINE_OBJ),
     };
 
     return {
@@ -107,7 +114,6 @@ export const transformToBaselineObject = responseData => {
     const supportStatus = baseline.status || statusTypes.NO_DATA;
     const badge = messages[supportStatus].badge;
     const dates = getBaselineDates(baseline);
-    const description = getDescription(supportStatus, dates);
 
     const data = {
         name,
@@ -116,14 +122,12 @@ export const transformToBaselineObject = responseData => {
         supportStatus,
         implementations: getBrowserImplementationList(implementations),
         dates,
-        description,
         showYear: supportStatus === statusTypes.NEWLY && dates.year !== '',
     };
 
-    console.log(':', { responseData, data });
-
     return {
         ...data,
+        description: getDescription(data),
         ariaLabel: getAriaLabel(data),
     };
 };

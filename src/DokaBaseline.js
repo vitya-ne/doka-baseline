@@ -10,6 +10,8 @@ export class DokaBaseline extends LitElement {
     static get styles() {
         return css`
             :host {
+                --doka-baseline-max-width: 1440px;
+
                 --doka-baseline-color-limited: light-dark(#ea8600, #f09418);
                 --doka-baseline-color-newly: light-dark(#1a73e8, #1b6ef3);
                 --doka-baseline-color-widely: light-dark(#1e8e3e, #1ea446);
@@ -28,15 +30,23 @@ export class DokaBaseline extends LitElement {
                 --doka-baseline-color-border: light-dark(#d9d9d9, #808080);
 
                 display: block;
-                max-width: 1200px;
+                max-width: var(--doka-baseline-max-width);
             }
 
             .doka-baseline {
-                padding: 0 16px;
+                padding: 0 1rem;
                 font-family: inherit;
                 font-size: 14px;
                 font-style: normal;
                 border-radius: 8px;
+
+                details:open {
+                    padding-bottom: 1px;
+
+                    .browser-version {
+                        visibility: visible;
+                    }
+                }
             }
 
             .doka-baseline.with-name {
@@ -124,6 +134,7 @@ export class DokaBaseline extends LitElement {
             .browsers .browser-support {
                 white-space: nowrap;
                 position: relative;
+                line-height: normal;
             }
 
             .support-widely,
@@ -152,12 +163,6 @@ export class DokaBaseline extends LitElement {
                 text-align: center;
                 font-size: 14px;
                 font-weight: bold;
-            }
-
-            .doka-baseline:hover {
-                .browser-version {
-                    visibility: visible;
-                }
             }
 
             summary {
@@ -239,18 +244,14 @@ export class DokaBaseline extends LitElement {
     }
 
     renderDescription(baselineObj) {
-        const { supportStatus, description, id } = baselineObj;
+        const { description } = baselineObj;
 
         return html`
-            <p>${description}</p>
+            <p>${description.text}</p>
             <p>
-                ${supportStatus === 'no_data'
-                    ? ''
-                    : html`<a
-                          href="https://web-platform-dx.github.io/web-features-explorer/features/${id}/"
-                          target="_top"
-                          >Learn more</a
-                      >`}
+                <a href=${description.featureLink} target="_top"
+                    >${description.featureLinkText}</a
+                >
             </p>
         `;
     }
