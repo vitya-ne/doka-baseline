@@ -38,4 +38,5 @@ export const messages = {
     unknownName: 'Unknown feature',
     date: 'Date',
     featureLinkText: 'Learn more about feature',
+    specLinkText: 'Specification',
 };

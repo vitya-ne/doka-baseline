@@ -38,4 +38,5 @@ export const messages = {
     unknownName: 'Неизвестное свойство',
     date: 'Дата',
     featureLinkText: 'Подробнее',
+    specLinkText: 'Спецификация',
 };

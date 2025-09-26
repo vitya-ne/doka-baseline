@@ -29,14 +29,16 @@ export class DokaBaseline extends LitElement {
 
                 --doka-baseline-color-border: light-dark(#d9d9d9, #808080);
 
+                --doka-baseline-link-color: var(--text-color, inherit);
+                --doka-baseline-font-size: var(--font-size-m, 14px);
+
                 display: block;
                 max-width: var(--doka-baseline-max-width);
             }
 
             .doka-baseline {
                 padding: 0 1rem;
-                font-family: inherit;
-                font-size: 14px;
+                font-size: var(--doka-baseline-font-size);
                 font-style: normal;
                 border-radius: 8px;
 
@@ -49,9 +51,12 @@ export class DokaBaseline extends LitElement {
                 }
             }
 
+            details p.link-list a {
+                margin-right: 1rem;
+            }
+
             .doka-baseline.with-name {
-                padding-top: 4px;
-                padding-bottom: 4px;
+                padding-top: 2px;
             }
 
             .doka-baseline.limited {
@@ -85,11 +90,11 @@ export class DokaBaseline extends LitElement {
                 border: solid 1px var(--doka-baseline-color-border);
             }
 
-            // a,
-            // a:active,
-            // a:visited {
-            //     color: var(--baseline-status-color-link);
-            // }
+            a,
+            a:active,
+            a:visited {
+                color: var(--doka-baseline-link-color);
+            }
 
             .name {
                 font-weight: normal;
@@ -243,16 +248,39 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
+    renderSpecLinks(description) {
+        const { specLinks, specLinkText } = description;
+
+        if (specLinks) {
+            return html`
+                <p class="link-list">
+                    ${specLinks.map(
+                        link =>
+                            html`<a href=${link} target="_top"
+                                >${specLinkText}
+                            </a>`,
+                    )}
+                </p>
+            `;
+        }
+    }
+
     renderDescription(baselineObj) {
         const { description } = baselineObj;
+        const { text, date, featureLink, featureLinkText } = description;
 
         return html`
-            <p>${description.text}</p>
-            <p>
-                <a href=${description.featureLink} target="_top"
-                    >${description.featureLinkText}</a
-                >
-            </p>
+            <p>${text} ${date ? `${date}` : ''}</p>
+            ${featureLink
+                ? html`
+                      <p>
+                          <a href=${featureLink} target="_top"
+                              >${featureLinkText}</a
+                          >
+                      </p>
+                  `
+                : ''}
+            ${this.renderSpecLinks(description)}
         `;
     }
 

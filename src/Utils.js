@@ -28,6 +28,7 @@ const EMPTY_BASELINE_OBJ = {
         null,
         implementationTypes.UNKNOWN,
     ),
+    specification: null,
 };
 
 const getAriaLabel = obj => {
@@ -51,7 +52,7 @@ const getAriaLabel = obj => {
 };
 
 const getDescription = obj => {
-    const { supportStatus, dates = {}, id } = obj;
+    const { supportStatus, dates = {}, id, specification } = obj;
     const { fullDate } = dates;
 
     const result = {
@@ -62,6 +63,10 @@ const getDescription = obj => {
         ...(supportStatus !== statusTypes.NO_DATA && {
             featureLink: `https://web-platform-dx.github.io/web-features-explorer/features/${id}/`,
             featureLinkText: messages.featureLinkText,
+        }),
+        ...(specification && {
+            specLinks: specification.links.map(item => item.link),
+            specLinkText: messages.specLinkText,
         }),
     };
 
@@ -74,14 +79,12 @@ const getBaselineDates = baseline => {
     const dateStr = highDateStr ?? lowDateStr;
 
     const year = dateStr ? dateStr.split('-')[0] : '';
+    const fullDate = dateStr
+        ? new Date(dateStr).toISOString().slice(0, 10).replace(/-/g, '.')
+        : '';
+
     return {
-        fullDate: dateStr
-            ? new Intl.DateTimeFormat('ru-RU', {
-                  year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-              }).format(new Date(dateStr))
-            : '',
+        fullDate,
         year,
     };
 };
@@ -109,6 +112,7 @@ export const transformToBaselineObject = responseData => {
         baseline,
         browser_implementations: implementations = {},
         feature_id: id,
+        spec: specification = {},
     } = responseData;
 
     const supportStatus = baseline.status || statusTypes.NO_DATA;
@@ -123,6 +127,7 @@ export const transformToBaselineObject = responseData => {
         implementations: getBrowserImplementationList(implementations),
         dates,
         showYear: supportStatus === statusTypes.NEWLY && dates.year !== '',
+        specification,
     };
 
     return {
