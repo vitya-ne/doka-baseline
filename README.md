@@ -63,3 +63,14 @@ To execute building:
 ```bash
 npm run build
 ```
+
+## License
+
+This project is licensed under the MIT License.
+See [LICENSE](./LICENSE) for details.
+
+Some portions of the code are derived from
+[baseline-status](https://github.com/web-platform-dx/baseline-status)
+Copyright [baseline-status contributors](https://github.com/web-platform-dx/baseline-status/graphs/contributors)
+Licensed under the [Apache License 2.0](./LICENSE-APACHE).
+See the [NOTICE](./NOTICE) file for attribution.

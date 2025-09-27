@@ -1,3 +1,7 @@
+// Copyright baseline-status contributors
+// Licensed under the Apache License, Version 2.0
+// See the LICENSE-APACHE file in the project root for details.
+
 import { html } from 'lit';
 
 export const SUPPORT_ICONS = {
