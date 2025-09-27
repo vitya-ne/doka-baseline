@@ -17,7 +17,8 @@
     "lint": "eslint ./src/ --ext .js",
     "format": "prettier \"src/*.js\" --write --ignore-path .gitignore",
     "test": "web-test-runner --coverage",
-    "test:watch": "web-test-runner --watch"
+    "test:watch": "web-test-runner --watch",
+    "build": "rollup -c"
   },
   "dependencies": {
     "@lit/task": "^1.0.3",
@@ -26,13 +27,18 @@
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@open-wc/testing": "^4.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@web/dev-server": "^0.4.6",
+    "@web/rollup-plugin-html": "^2.3.0",
     "@web/test-runner": "^0.18.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-lit": "^2.1.1",
     "eslint-plugin-wc": "^3.0.1",
-    "prettier": "^3.3.2"
+    "prettier": "^3.3.2",
+    "rollup": "^4.52.0",
+    "rollup-plugin-summary": "^3.0.1"
   },
   "customElements": "custom-elements.json",
   "prettier": {
