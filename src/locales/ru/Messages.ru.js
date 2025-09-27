@@ -36,7 +36,7 @@ export const messages = {
         no_data: 'неизвестно',
     },
     unknownName: 'Неизвестное свойство',
-    date: 'Дата',
+    date: 'начиная с',
     featureLinkText: 'Подробнее',
     specLinkText: 'Спецификация',
 };

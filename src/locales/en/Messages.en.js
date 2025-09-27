@@ -36,7 +36,7 @@ export const messages = {
         no_data: 'unknown',
     },
     unknownName: 'Unknown feature',
-    date: 'Date',
+    date: 'since',
     featureLinkText: 'Learn more about feature',
     specLinkText: 'Specification',
 };

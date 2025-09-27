@@ -10,27 +10,59 @@ export class DokaBaseline extends LitElement {
     static get styles() {
         return css`
             :host {
-                --doka-baseline-max-width: 1440px;
+                --limited: 34 100% 46%;
+                --newly: 214 82% 51%;
+                --widely: 137 65% 34%;
+                --no_data: 0 0% 44%;
 
-                --doka-baseline-color-limited: light-dark(#ea8600, #f09418);
-                --doka-baseline-color-newly: light-dark(#1a73e8, #1b6ef3);
-                --doka-baseline-color-widely: light-dark(#1e8e3e, #1ea446);
-                --doka-baseline-color-no_data: light-dark(#707070, #909090);
+                --limited-dark: 34 88% 52%;
+                --newly-dark: 217 90% 53%;
+                --widely-dark: 138 69% 38%;
+                --no_data-dark: 0 0% 44%;
+
+                --doka-baseline-limited-color: light-dark(
+                    hsl(var(--limited)),
+                    hsl(var(--limited-dark))
+                );
+                --doka-baseline-newly-color: light-dark(
+                    hsl(var(--newly)),
+                    hsl(var(--newly-dark))
+                );
+                --doka-baseline-widely-color: light-dark(
+                    hsl(var(--widely)),
+                    hsl(var(--widely-dark))
+                );
+                --doka-baseline-no_data-color: light-dark(
+                    hsl(var(--no_data)),
+                    hsl(var(--no_data-dark))
+                );
 
                 --doka-baseline-bgcolor-limited: light-dark(
-                    #ea860024,
-                    #f0941812
+                    hsl(var(--limited) / 0.14),
+                    hsl(var(--limited-dark) / 0.07)
                 );
-                --doka-baseline-bgcolor-newly: light-dark(#1a73e824, #1b6ef312);
+                --doka-baseline-bgcolor-newly: light-dark(
+                    hsl(var(--newly) / 0.14),
+                    hsl(var(--newly-dark) / 0.07)
+                );
                 --doka-baseline-bgcolor-widely: light-dark(
-                    #1e8e3e24,
-                    #1ea44612
+                    hsl(var(--widely) / 0.14),
+                    hsl(var(--widely-dark) / 0.07)
                 );
 
-                --doka-baseline-color-border: light-dark(#d9d9d9, #808080);
+                --doka-baseline-color-border: light-dark(
+                    hsl(0, 0%, 85%),
+                    hsl(0, 0%, 50%)
+                );
 
-                --doka-baseline-link-color: var(--text-color, inherit);
+                --doka-baseline-badge-color: hsl(0, 0%, 100%);
                 --doka-baseline-font-size: var(--font-size-m, 14px);
+                --doka-baseline-link-color: var(--text-color, inherit);
+                --doka-baseline-stroke-color: var(
+                    --stroke-color,
+                    var(--doka-baseline-color-border)
+                );
+                --doka-baseline-max-width: 1440px;
 
                 display: block;
                 max-width: var(--doka-baseline-max-width);
@@ -51,10 +83,6 @@ export class DokaBaseline extends LitElement {
                 }
             }
 
-            details p.link-list a {
-                margin-right: 1rem;
-            }
-
             .doka-baseline.with-name {
                 padding-top: 2px;
             }
@@ -63,7 +91,7 @@ export class DokaBaseline extends LitElement {
                 background: var(--doka-baseline-bgcolor-limited);
 
                 .badge {
-                    background: var(--doka-baseline-color-limited);
+                    background: var(--doka-baseline-limited-color);
                 }
             }
 
@@ -71,7 +99,7 @@ export class DokaBaseline extends LitElement {
                 background: var(--doka-baseline-bgcolor-newly);
 
                 .badge {
-                    background: var(--doka-baseline-color-newly);
+                    background: var(--doka-baseline-newly-color);
                 }
             }
 
@@ -79,21 +107,15 @@ export class DokaBaseline extends LitElement {
                 background: var(--doka-baseline-bgcolor-widely);
 
                 .badge {
-                    background: var(--doka-baseline-color-widely);
+                    background: var(--doka-baseline-widely-color);
                 }
             }
 
             .doka-baseline.no_data {
                 .badge {
-                    background: var(--doka-baseline-color-no_data);
+                    background: var(--doka-baseline-no_data-color);
                 }
                 border: solid 1px var(--doka-baseline-color-border);
-            }
-
-            a,
-            a:active,
-            a:visited {
-                color: var(--doka-baseline-link-color);
             }
 
             .name {
@@ -126,7 +148,7 @@ export class DokaBaseline extends LitElement {
                 text-transform: uppercase;
                 font-size: 12px;
                 border-radius: 4px;
-                color: #fff;
+                color: var(--doka-baseline-badge-color);
             }
 
             .browsers {
@@ -144,21 +166,21 @@ export class DokaBaseline extends LitElement {
 
             .support-widely,
             .support-available {
-                color: var(--doka-baseline-color-widely);
+                color: var(--doka-baseline-widely-color);
             }
 
             .browsers.newly {
                 .support-available {
-                    color: var(--doka-baseline-color-newly);
+                    color: var(--doka-baseline-newly-color);
                 }
             }
 
             .support-unavailable {
-                color: var(--doka-baseline-color-limited);
+                color: var(--doka-baseline-limited-color);
             }
 
             .support-no_data {
-                color: var(--doka-baseline-color-no_data);
+                color: var(--doka-baseline-no_data-color);
             }
 
             .browser-version {
@@ -167,7 +189,7 @@ export class DokaBaseline extends LitElement {
                 width: 50%;
                 text-align: center;
                 font-size: 14px;
-                font-weight: bold;
+                font-weight: normal;
             }
 
             summary {
@@ -179,6 +201,25 @@ export class DokaBaseline extends LitElement {
                 padding: 16px 0;
                 cursor: pointer;
                 font-size: 16px;
+            }
+
+            details {
+                p + p {
+                    margin-top: 12px;
+                    margin-bottom: 16px;
+                }
+
+                p.link-list a {
+                    margin-right: 1rem;
+                }
+
+                a,
+                a:active,
+                a:visited {
+                    text-decoration-color: var(--doka-baseline-stroke-color);
+                    color: var(--doka-baseline-link-color);
+                    text-underline-offset: 0.125em;
+                }
             }
         `;
     }
@@ -256,7 +297,10 @@ export class DokaBaseline extends LitElement {
                 <p class="link-list">
                     ${specLinks.map(
                         link =>
-                            html`<a href=${link} target="_top"
+                            html`<a
+                                href=${link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 >${specLinkText}
                             </a>`,
                     )}
@@ -267,14 +311,17 @@ export class DokaBaseline extends LitElement {
 
     renderDescription(baselineObj) {
         const { description } = baselineObj;
-        const { text, date, featureLink, featureLinkText } = description;
+        const { text, featureLink, featureLinkText } = description;
 
         return html`
-            <p>${text} ${date ? `${date}` : ''}</p>
+            <p>${text}</p>
             ${featureLink
                 ? html`
                       <p>
-                          <a href=${featureLink} target="_top"
+                          <a
+                              href=${featureLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               >${featureLinkText}</a
                           >
                       </p>

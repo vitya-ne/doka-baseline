@@ -56,10 +56,7 @@ const getDescription = obj => {
     const { fullDate } = dates;
 
     const result = {
-        text: `${messages[supportStatus].description}.`,
-        ...(fullDate && {
-            date: `${messages.date}: ${fullDate}`,
-        }),
+        text: `${messages[supportStatus].description}${fullDate ? ` ${messages.date}: ${fullDate}` : '.'}`,
         ...(supportStatus !== statusTypes.NO_DATA && {
             featureLink: `https://web-platform-dx.github.io/web-features-explorer/features/${id}/`,
             featureLinkText: messages.featureLinkText,
@@ -80,7 +77,11 @@ const getBaselineDates = baseline => {
 
     const year = dateStr ? dateStr.split('-')[0] : '';
     const fullDate = dateStr
-        ? new Date(dateStr).toISOString().slice(0, 10).replace(/-/g, '.')
+        ? new Intl.DateTimeFormat('ru-RU', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+          }).format(new Date(dateStr))
         : '';
 
     return {
