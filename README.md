@@ -2,20 +2,30 @@
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
-## Installation
+## Local Demo with `web-dev-server`
 
 ```bash
-npm i doka-baseline
+npm start
 ```
+
+To run a local development server that serves the basic demo located in `demo/index.html`
 
 ## Usage
 
+```js
+// doka-baseline.js:
+
+import { DokaBaseline } from './src/DokaBaseline.js';
+
+window.customElements.define('doka-baseline', DokaBaseline);
+```
+
 ```html
 <script type="module">
-  import 'doka-baseline/doka-baseline.js';
+    import './doka-baseline.js';
 </script>
 
-<doka-baseline></doka-baseline>
+<doka-baseline groupId="text-wrap"></doka-baseline>
 ```
 
 ## Linting and formatting
@@ -46,17 +56,10 @@ To run the tests in interactive watch mode run:
 npm run test:watch
 ```
 
+## Building
 
-## Tooling configs
-
-For most of the tools, the configuration is in the `package.json` to minimize the amount of files in your project.
-
-If you customize the configuration a lot, you can consider moving them to individual files.
-
-## Local Demo with `web-dev-server`
+To execute building:
 
 ```bash
-npm start
+npm run build
 ```
-
-To run a local development server that serves the basic demo located in `demo/index.html`
