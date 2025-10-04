@@ -70,7 +70,7 @@ const getDescription = obj => {
     const { fullDate } = dates;
 
     const result = {
-        text: `${messages[supportStatus].description}${fullDate ? ` ${messages.date}: ${fullDate}` : '.'}`,
+        text: `${messages[supportStatus].description}${fullDate ? ` ${messages.date} ${fullDate}` : '.'}`,
         ...(supportStatus !== statusTypes.NO_DATA && {
             featureLink: `https://web-platform-dx.github.io/web-features-explorer/features/${id}/`,
             featureLinkText: messages.featureLinkText,
