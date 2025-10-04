@@ -232,12 +232,16 @@ export class DokaBaseline extends LitElement {
     static properties = {
         groupId: { type: String },
         showName: { type: String },
+        showFeatLink: { type: String },
+        showSpecLinks: { type: String },
     };
 
     constructor() {
         super();
         this.groupId = '';
+        this.showFeatLink = 'false';
         this.showName = 'false';
+        this.showSpecLinks = 'false';
     }
 
     fetchData = new Task(this, {
@@ -295,6 +299,8 @@ export class DokaBaseline extends LitElement {
     }
 
     renderSpecLinks(description) {
+        if (this.showSpecLinks !== 'true') return '';
+
         const { specLinks, specLinkText } = description;
 
         if (specLinks) {
@@ -317,10 +323,12 @@ export class DokaBaseline extends LitElement {
     renderDescription(baselineObj) {
         const { description } = baselineObj;
         const { text, featureLink, featureLinkText } = description;
+        const showFeatLink =
+            this.showFeatLink === 'true' && Boolean(featureLink);
 
         return html`
             <p>${text}</p>
-            ${featureLink
+            ${showFeatLink
                 ? html`
                       <p>
                           <a
