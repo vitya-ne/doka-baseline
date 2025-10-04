@@ -31,8 +31,20 @@ const EMPTY_BASELINE_OBJ = {
     specification: null,
 };
 
+const LOADING_BASELINE_OBJ = {
+    name: '',
+    badge: messages.loading.badge,
+    loading: true,
+};
+
 const getAriaLabel = obj => {
-    const { badge, supportStatus, implementations, dates } = obj;
+    const { badge, supportStatus, implementations, dates, loading } = obj;
+
+    const labelPar1 = [badge, dates?.year].filter(Boolean).join(' ');
+
+    if (loading) {
+        return labelPar1;
+    }
 
     const statuses = implementations.map(browser => browser.data.status);
 
@@ -40,7 +52,6 @@ const getAriaLabel = obj => {
         statuses.fill(implementationStatusTypes.UNKNOWN);
     }
 
-    const labelPar1 = [badge, dates?.year].filter(Boolean).join(' ');
     const labelPart2 = implementations
         .map((browser, index) => {
             const id = browser.id;
@@ -52,7 +63,10 @@ const getAriaLabel = obj => {
 };
 
 const getDescription = obj => {
-    const { supportStatus, dates = {}, id, specification } = obj;
+    const { supportStatus, dates = {}, id, specification, loading } = obj;
+
+    if (loading) return {};
+
     const { fullDate } = dates;
 
     const result = {
@@ -93,12 +107,13 @@ const getBaselineDates = baseline => {
 const getEmptyBaselineObject = sourceData => {
     const data = {
         ...EMPTY_BASELINE_OBJ,
+        ...(sourceData?.loading && { ...LOADING_BASELINE_OBJ }),
         ...(sourceData?.feature_id && { name: sourceData.feature_id }),
-        description: getDescription(EMPTY_BASELINE_OBJ),
     };
 
     return {
         ...data,
+        description: getDescription(data),
         ariaLabel: getAriaLabel(data),
     };
 };

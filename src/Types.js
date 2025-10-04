@@ -3,6 +3,7 @@ export const statusTypes = {
     NEWLY: 'newly',
     WIDELY: 'widely',
     NO_DATA: 'no_data',
+    LOADING: 'loading',
 };
 
 export const implementationStatusTypes = {

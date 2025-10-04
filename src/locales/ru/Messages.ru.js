@@ -19,10 +19,10 @@ export const messages = {
         description:
             'Информации о поддержке этой функциональности браузерами не найдена',
     },
-    // loading: {
-    //     badge: 'Loading',
-    //     description: '',
-    // },
+    loading: {
+        badge: 'Загрузка',
+        description: '',
+    },
     supported: {
         chrome: 'Поддерживается в Chrome',
         edge: 'Поддерживается в Edge',

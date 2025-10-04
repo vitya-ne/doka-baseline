@@ -118,6 +118,11 @@ export class DokaBaseline extends LitElement {
                 border: solid 1px var(--doka-baseline-color-border);
             }
 
+            .doka-baseline.loading {
+                border: none;
+                pointer-events: none;
+            }
+
             .name {
                 font-weight: normal;
                 font-size: 20px;
@@ -351,7 +356,7 @@ export class DokaBaseline extends LitElement {
         //       </svg>
         //     </span>
 
-        const mainClass = `doka-baseline ${supportStatus}${this.showName === 'true' ? ' with-name' : ''}`;
+        const mainClass = `doka-baseline ${supportStatus}${this.showName === 'true' ? ' with-name' : ''}${baselineObj.loading ? ' loading' : ''}`;
 
         return html`
             <div class=${mainClass}>
@@ -380,7 +385,13 @@ export class DokaBaseline extends LitElement {
         }
 
         return this.fetchData.render({
-            pending: () => null, // this.renderTemplate(missingFeature, true)
+            pending: () => {
+                const loadingBaselineObj = transformToBaselineObject({
+                    loading: true,
+                    feature_id: this.groupId,
+                });
+                return this.renderBaseline(loadingBaselineObj);
+            },
             complete: responseData => {
                 const baselineObj = transformToBaselineObject(responseData);
 
