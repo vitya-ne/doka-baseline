@@ -144,12 +144,12 @@ export class DokaBaseline extends LitElement {
                 align-items: center;
                 white-space: nowrap;
                 gap: 0.5rem;
+                line-height: 24px;
                 font-weight: bold;
             }
 
             .badge {
                 padding: 0 0.5rem;
-                line-height: 2;
                 text-transform: uppercase;
                 font-size: 12px;
                 border-radius: 4px;
@@ -205,7 +205,24 @@ export class DokaBaseline extends LitElement {
                 gap: 16px;
                 padding: 16px 0;
                 cursor: pointer;
+                line-height: 24px;
                 font-size: 16px;
+            }
+
+            details > summary .open-icon {
+                width: 10px;
+                height: 20px;
+                line-height: normal;
+                margin-left: auto;
+                color: inherit;
+            }
+
+            details > summary .open-icon svg {
+                transition: transform 0.3s;
+            }
+
+            details[open] summary .open-icon svg {
+                transform: rotate(180deg);
             }
 
             details {
@@ -358,12 +375,6 @@ export class DokaBaseline extends LitElement {
 
         const { name, ariaLabel, supportStatus } = baselineObj;
 
-        //     <span class="open-icon" aria-hidden="true">
-        //       <svg xmlns="http://www.w3.org/2000/svg" width="11" height="7" viewBox="0 0 11 7" fill="none">
-        //         <path d="M5.5 6.45356L0.25 1.20356L1.19063 0.262939L5.5 4.59419L9.80937 0.284814L10.75 1.22544L5.5 6.45356Z" fill="currentColor"/>
-        //       </svg>
-        //     </span>
-
         const mainClass = `doka-baseline ${supportStatus}${this.showName === 'true' ? ' with-name' : ''}${baselineObj.loading ? ' loading' : ''}`;
 
         return html`
@@ -379,10 +390,26 @@ export class DokaBaseline extends LitElement {
                             ${this.renderStatusTitle(baselineObj)}
                             ${this.renderImplementationsInfo(baselineObj)}
                         </div>
+
+                        <div>
+                            <span class="open-icon" aria-hidden="true">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="11"
+                                    height="7"
+                                    viewBox="0 0 11 7"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M5.5 6.45356L0.25 1.20356L1.19063 0.262939L5.5 4.59419L9.80937 0.284814L10.75 1.22544L5.5 6.45356Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </span>
+                        </div>
                     </summary>
                     ${this.renderDescription(baselineObj)}
                 </details>
-                <div></div>
             </div>
         `;
     }
