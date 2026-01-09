@@ -19,10 +19,9 @@ export const messages = {
         description:
             'Информации о поддержке этой функциональности браузерами не найдена',
     },
-    // loading: {
-    //     badge: 'Loading',
-    //     description: '',
-    // },
+    loading: {
+        description: 'Загрузка данных о базовой поддержке…',
+    },
     supported: {
         chrome: 'Поддерживается в Chrome',
         edge: 'Поддерживается в Edge',

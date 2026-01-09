@@ -19,10 +19,9 @@ export const messages = {
         description:
             'We currently don`t have browser support information about this feature',
     },
-    // loading: {
-    //     badge: 'Loading',
-    //     description: '',
-    // },
+    loading: {
+        description: 'Loading baseline data…',
+    },
     supported: {
         chrome: 'Supported in Chrome',
         edge: 'Supported in Edge',

@@ -4,7 +4,7 @@ import { Task } from '@lit/task';
 import BaselineIcon from '../libs/baseline-status/baseline-icon';
 import { ICONS as BROWSER_ICONS } from '../libs/baseline-status/browser-icons';
 import { SUPPORT_ICONS } from '../libs/baseline-status/support-icons';
-import { transformToBaselineObject } from './Utils';
+import { transformToBaselineObject, getLoadingMessage } from './Utils';
 
 export class DokaBaseline extends LitElement {
     static get styles() {
@@ -412,7 +412,7 @@ export class DokaBaseline extends LitElement {
             <div class=${mainClass} aria-busy="true" aria-live="polite">
                 <div class="loading-row">
                     <span class="loading-indicator" aria-hidden="true"></span>
-                    <span>Loading baseline data…</span>
+                    <span>${getLoadingMessage()}</span>
                 </div>
             </div>
         `;
