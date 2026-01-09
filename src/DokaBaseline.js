@@ -87,6 +87,35 @@ export class DokaBaseline extends LitElement {
                 padding-top: 2px;
             }
 
+            .doka-baseline.loading {
+                border: 1px dashed var(--doka-baseline-color-border);
+                background: transparent;
+            }
+
+            .loading-row {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 16px 0;
+                color: var(--doka-baseline-no_data-color);
+                font-size: 16px;
+            }
+
+            .loading-indicator {
+                width: 1em;
+                height: 1em;
+                border-radius: 50%;
+                border: 2px solid var(--doka-baseline-color-border);
+                border-top-color: transparent;
+                animation: doka-baseline-spin 1s linear infinite;
+            }
+
+            @keyframes doka-baseline-spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
             .doka-baseline.limited {
                 background: var(--doka-baseline-bgcolor-limited);
 
@@ -374,13 +403,28 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
+    renderLoading() {
+        const mainClass = `doka-baseline loading${
+            this.showName === 'true' ? ' with-name' : ''
+        }`;
+
+        return html`
+            <div class=${mainClass} aria-busy="true" aria-live="polite">
+                <div class="loading-row">
+                    <span class="loading-indicator" aria-hidden="true"></span>
+                    <span>Loading baseline data…</span>
+                </div>
+            </div>
+        `;
+    }
+
     render() {
         if (!this.groupId) {
             return null;
         }
 
         return this.fetchData.render({
-            pending: () => null, // this.renderTemplate(missingFeature, true)
+            pending: () => this.renderLoading(),
             complete: responseData => {
                 const baselineObj = transformToBaselineObject(responseData);
 
