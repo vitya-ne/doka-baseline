@@ -6,6 +6,28 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
+        <script>
+            // Demo-only: keep one example permanently in the loading state
+            (function () {
+                const originalFetch = window.fetch;
+                window.fetch = function (url, options) {
+                    const isFeatureRequest =
+                        typeof url === 'string' &&
+                        url.startsWith(
+                            'https://api.webstatus.dev/v1/features/',
+                        );
+
+                    if (
+                        isFeatureRequest &&
+                        url.endsWith('/text-wrap-loading-demo')
+                    ) {
+                        return new Promise(() => {});
+                    }
+
+                    return originalFetch(url, options);
+                };
+            })();
+        </script>
         <script type="module" src="../doka-baseline.js"></script>
         <style>
             *,
@@ -69,6 +91,10 @@
                     groupId="unknown"
                     showName="true"
                 ></doka-baseline>
+            </div>
+            <div class="item">
+                loading state demonstration
+                <doka-baseline groupId="text-wrap-loading-demo"></doka-baseline>
             </div>
         </div>
     </body>

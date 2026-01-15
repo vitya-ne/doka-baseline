@@ -4,7 +4,7 @@ import { Task } from '@lit/task';
 import BaselineIcon from '../libs/baseline-status/baseline-icon';
 import { ICONS as BROWSER_ICONS } from '../libs/baseline-status/browser-icons';
 import { SUPPORT_ICONS } from '../libs/baseline-status/support-icons';
-import { transformToBaselineObject } from './Utils';
+import { transformToBaselineObject, getLoadingMessage } from './Utils';
 
 export class DokaBaseline extends LitElement {
     static get styles() {
@@ -85,6 +85,35 @@ export class DokaBaseline extends LitElement {
 
             .doka-baseline.with-name {
                 padding-top: 2px;
+            }
+
+            .doka-baseline.loading {
+                border: 1px dashed var(--doka-baseline-color-border);
+                background: transparent;
+            }
+
+            .loading-row {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 16px 0;
+                color: var(--doka-baseline-no_data-color);
+                font-size: 16px;
+            }
+
+            .loading-indicator {
+                width: 1em;
+                height: 1em;
+                border-radius: 50%;
+                border: 2px solid var(--doka-baseline-color-border);
+                border-top-color: transparent;
+                animation: doka-baseline-spin 1s linear infinite;
+            }
+
+            @keyframes doka-baseline-spin {
+                to {
+                    transform: rotate(360deg);
+                }
             }
 
             .doka-baseline.limited {
@@ -414,19 +443,28 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
+    renderLoading() {
+        const mainClass = `doka-baseline loading${
+            this.showName === 'true' ? ' with-name' : ''
+        }`;
+
+        return html`
+            <div class=${mainClass} aria-busy="true" aria-live="polite">
+                <div class="loading-row">
+                    <span class="loading-indicator" aria-hidden="true"></span>
+                    <span>${getLoadingMessage()}</span>
+                </div>
+            </div>
+        `;
+    }
+
     render() {
         if (!this.groupId) {
             return null;
         }
 
         return this.fetchData.render({
-            pending: () => {
-                const loadingBaselineObj = transformToBaselineObject({
-                    loading: true,
-                    feature_id: this.groupId,
-                });
-                return this.renderBaseline(loadingBaselineObj);
-            },
+            pending: () => this.renderLoading(),
             complete: responseData => {
                 const baselineObj = transformToBaselineObject(responseData);
 

@@ -20,8 +20,7 @@ export const messages = {
             'Информации о поддержке этой функциональности браузерами не найдена',
     },
     loading: {
-        badge: 'Загрузка',
-        description: '',
+        description: 'Загрузка данных о базовой поддержке…',
     },
     supported: {
         chrome: 'Поддерживается в Chrome',

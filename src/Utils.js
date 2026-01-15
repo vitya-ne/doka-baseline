@@ -152,3 +152,5 @@ export const transformToBaselineObject = responseData => {
         ariaLabel: getAriaLabel(data),
     };
 };
+
+export const getLoadingMessage = () => messages.loading.description;
