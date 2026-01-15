@@ -88,6 +88,7 @@ export class DokaBaseline extends LitElement {
             }
 
             .doka-baseline.loading {
+                pointer-events: none;
                 border: 1px dashed var(--doka-baseline-color-border);
                 background: transparent;
             }
@@ -145,11 +146,6 @@ export class DokaBaseline extends LitElement {
                     background: var(--doka-baseline-no_data-color);
                 }
                 border: solid 1px var(--doka-baseline-color-border);
-            }
-
-            .doka-baseline.loading {
-                border: none;
-                pointer-events: none;
             }
 
             .name {
