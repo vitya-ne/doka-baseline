@@ -56,10 +56,21 @@
                 flex-wrap: wrap;
             }
 
+            pre {
+                margin: 0;
+                padding: 0 2rem 0 0;
+                background-color: #25272b;
+            }
+
+            .language-html {
+                font-size: 1rem;
+            }
+
             .item {
                 flex: 1 1 100%;
                 width: 100%;
             }
+
             doka-baseline {
                 margin-top: 0.5rem;
             }
@@ -69,7 +80,10 @@
         <div class="container">
             <div class="item">
                 text-justify
-                <doka-baseline groupId="text-justify"></doka-baseline>
+                <doka-baseline
+                    groupId="text-justify"
+                    showSpecLinks="true"
+                ></doka-baseline>
             </div>
             <div class="item">
                 text-wrap
@@ -96,6 +110,14 @@
                 loading state demonstration
                 <doka-baseline groupId="text-wrap-loading-demo"></doka-baseline>
             </div>
+            Code
+            <pre><code class="language-html">
+    &lt;doka-baseline
+        groupId="text-wrap"
+        showFeatLink="false/true"
+        showSpecLinks="false/true"
+    &gt&lt;/doka-baseline&gt
+            </code></pre>
         </div>
     </body>
 </html>

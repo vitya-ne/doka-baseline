@@ -340,49 +340,40 @@ export class DokaBaseline extends LitElement {
         `;
     }
 
-    renderSpecLinks(description) {
-        if (this.showSpecLinks !== 'true') return '';
-
-        const { specLinks, specLinkText } = description;
-
-        if (specLinks) {
-            return html`
-                <p class="link-list">
-                    ${specLinks.map(
-                        link =>
-                            html`<a
-                                href=${link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >${specLinkText}
-                            </a>`,
-                    )}
-                </p>
-            `;
-        }
+    renderLink(link, linkTxt) {
+        return html`
+            <a href=${link} target="_blank" rel="noopener noreferrer"
+                >${linkTxt}
+            </a>
+        `;
     }
 
     renderDescription(baselineObj) {
         const { description } = baselineObj;
-        const { text, featureLink, featureLinkText } = description;
+        const { text, featureLink, featureLinkText, specLinks, specLinkText } =
+            description;
         const showFeatLink =
             this.showFeatLink === 'true' && Boolean(featureLink);
+        const showSpecLinks =
+            this.showSpecLinks === 'true' && Boolean(specLinks);
+        const showLinks = showFeatLink || showSpecLinks;
 
         return html`
             <p>${text}</p>
-            ${showFeatLink
+            ${showLinks
                 ? html`
-                      <p>
-                          <a
-                              href=${featureLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              >${featureLinkText}</a
-                          >
+                      <p class="link-list">
+                          ${showFeatLink
+                              ? this.renderLink(featureLink, featureLinkText)
+                              : ''}
+                          ${showSpecLinks
+                              ? specLinks.map(link =>
+                                    this.renderLink(link, specLinkText),
+                                )
+                              : ''}
                       </p>
                   `
                 : ''}
-            ${this.renderSpecLinks(description)}
         `;
     }
 
