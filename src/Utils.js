@@ -184,7 +184,11 @@ export const parseBaselineObject = baselineData => {
 
     const supportStatus = status || statusTypes.NO_DATA;
     const badge = messages[supportStatus].badge;
-    const dates = getBaselineDates({ date });
+    const dates =
+        supportStatus === statusTypes.NEWLY ||
+        supportStatus === statusTypes.WIDELY
+            ? getBaselineDates({ date })
+            : '';
 
     const parsedVersions = parseObjFromStr(versions);
     const implementations = getImplementations(parsedVersions);
