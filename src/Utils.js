@@ -172,17 +172,14 @@ export const transformToBaselineObject = responseData => {
 };
 
 export const parseBaselineObject = baselineData => {
-    if (
-        !baselineData?.status ||
-        !baselineData?.date ||
-        !baselineData?.versions
-    ) {
+    if (!baselineData?.status || !baselineData?.versions) {
         return getEmptyBaselineObject();
     }
 
     const { status, versions, date } = baselineData;
 
     const supportStatus = status || statusTypes.NO_DATA;
+
     const badge = messages[supportStatus].badge;
     const dates =
         supportStatus === statusTypes.NEWLY ||

@@ -280,9 +280,9 @@ export class DokaBaseline extends LitElement {
         showName: { type: String },
         showFeatLink: { type: String },
         showSpecLinks: { type: String },
-        versionsInfo: { type: String },
-        dateInfo: { type: String },
         statusInfo: { type: String },
+        dateInfo: { type: String },
+        versionsInfo: { type: String },
     };
 
     constructor() {
@@ -291,9 +291,9 @@ export class DokaBaseline extends LitElement {
         this.showFeatLink = 'false';
         this.showName = 'false';
         this.showSpecLinks = 'false';
-        this.versionsInfo = '';
-        this.dateInfo = '';
         this.statusInfo = '';
+        this.dateInfo = '';
+        this.versionsInfo = '';
     }
 
     fetchData = new Task(this, {
@@ -468,7 +468,7 @@ export class DokaBaseline extends LitElement {
 
     render() {
         if (!this.groupId) {
-            if (!this.statusInfo || !this.versionsInfo || !this.dateInfo) {
+            if (!this.statusInfo || !this.versionsInfo) {
                 return null;
             }
             const baselineObj = parseBaselineObject({
