@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
 // import terser from '@rollup/plugin-terser';
-// import minifyHTML from '@lit-labs/rollup-plugin-minify-html-literals';
 import summary from 'rollup-plugin-summary';
 
 export default {
@@ -10,8 +9,10 @@ export default {
         resolve({
             resolveOnly: ['/src'],
         }),
-        // minifyHTML(),
         // terser({
+        //     format: {
+        //         comments: 'all',
+        //     },
         //     compress: {
         //         drop_console: true,
         //     },
