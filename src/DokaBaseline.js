@@ -4,7 +4,11 @@ import { Task } from '@lit/task';
 import BaselineIcon from '../libs/baseline-status/baseline-icon';
 import { ICONS as BROWSER_ICONS } from '../libs/baseline-status/browser-icons';
 import { SUPPORT_ICONS } from '../libs/baseline-status/support-icons';
-import { transformToBaselineObject, getLoadingMessage } from './Utils';
+import {
+    transformToBaselineObject,
+    getLoadingMessage,
+    parseBaselineObject,
+} from './Utils';
 
 export class DokaBaseline extends LitElement {
     static get styles() {
@@ -276,6 +280,9 @@ export class DokaBaseline extends LitElement {
         showName: { type: String },
         showFeatLink: { type: String },
         showSpecLinks: { type: String },
+        versionsInfo: { type: String },
+        dateInfo: { type: String },
+        statusInfo: { type: String },
     };
 
     constructor() {
@@ -284,6 +291,9 @@ export class DokaBaseline extends LitElement {
         this.showFeatLink = 'false';
         this.showName = 'false';
         this.showSpecLinks = 'false';
+        this.versionsInfo = '';
+        this.dateInfo = '';
+        this.statusInfo = '';
     }
 
     fetchData = new Task(this, {
@@ -304,9 +314,9 @@ export class DokaBaseline extends LitElement {
         const { badge, dates, showYear } = baselineObj;
         return html`
             <div class="status-title">
-                <span class="badge">${badge}</span>${showYear
-                    ? `${dates.year}`
-                    : ''}
+                <span class="badge">${badge}</span>${
+                    showYear ? `${dates.year}` : ''
+                }
             </div>
         `;
     }
@@ -321,9 +331,11 @@ export class DokaBaseline extends LitElement {
                 <browser-support-icon class="support-${status}">
                     ${SUPPORT_ICONS[status]}
                 </browser-support-icon>
-                ${version
-                    ? html`<div class="browser-version">${version}</div>`
-                    : ''}
+                ${
+                    version
+                        ? html`<div class="browser-version">${version}</div>`
+                        : ''
+                }
             </span>
         `;
     }
@@ -360,20 +372,29 @@ export class DokaBaseline extends LitElement {
 
         return html`
             <p>${text}</p>
-            ${showLinks
-                ? html`
-                      <p class="link-list">
-                          ${showFeatLink
-                              ? this.renderLink(featureLink, featureLinkText)
-                              : ''}
-                          ${showSpecLinks
-                              ? specLinks.map(link =>
-                                    this.renderLink(link, specLinkText),
-                                )
-                              : ''}
-                      </p>
-                  `
-                : ''}
+            ${
+                showLinks
+                    ? html`
+                          <p class="link-list">
+                              ${
+                                  showFeatLink
+                                      ? this.renderLink(
+                                            featureLink,
+                                            featureLinkText,
+                                        )
+                                      : ''
+                              }
+                              ${
+                                  showSpecLinks
+                                      ? specLinks.map(link =>
+                                            this.renderLink(link, specLinkText),
+                                        )
+                                      : ''
+                              }
+                          </p>
+                      `
+                    : ''
+            }
         `;
     }
 
@@ -447,7 +468,15 @@ export class DokaBaseline extends LitElement {
 
     render() {
         if (!this.groupId) {
-            return null;
+            if (!this.statusInfo || !this.versionsInfo || !this.dateInfo) {
+                return null;
+            }
+            const baselineObj = parseBaselineObject({
+                status: this.statusInfo,
+                versions: this.versionsInfo,
+                date: this.dateInfo,
+            });
+            return this.renderBaseline(baselineObj);
         }
 
         return this.fetchData.render({

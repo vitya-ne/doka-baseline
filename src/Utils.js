@@ -20,6 +20,24 @@ const getBrowserImplementationList = (
     }));
 };
 
+const getImplementations = versions => {
+    return browserNameList.reduce((acc, browserName) => {
+        const version = versions[browserName];
+        if (version) {
+            acc[browserName] = {
+                status: implementationStatusTypes.YES,
+                version,
+            };
+        }
+        return acc;
+    }, {});
+};
+
+const parseObjFromStr = (str = '') => {
+    const validJson = str.replace(/'/g, '"');
+    return JSON.parse(validJson);
+};
+
 const EMPTY_BASELINE_OBJ = {
     name: messages.unknownName,
     badge: messages.no_data.badge,
@@ -85,9 +103,9 @@ const getDescription = obj => {
 };
 
 const getBaselineDates = baseline => {
-    const { low_date: lowDateStr, high_date: highDateStr } = baseline;
+    const { low_date: lowDateStr, high_date: highDateStr, date } = baseline;
 
-    const dateStr = highDateStr ?? lowDateStr;
+    const dateStr = highDateStr ?? lowDateStr ?? date;
 
     const year = dateStr ? dateStr.split('-')[0] : '';
     const fullDate = dateStr
@@ -144,6 +162,42 @@ export const transformToBaselineObject = responseData => {
         dates,
         showYear: supportStatus === statusTypes.NEWLY && dates.year !== '',
         specification,
+    };
+
+    return {
+        ...data,
+        description: getDescription(data),
+        ariaLabel: getAriaLabel(data),
+    };
+};
+
+export const parseBaselineObject = baselineData => {
+    if (
+        !baselineData?.status ||
+        !baselineData?.date ||
+        !baselineData?.versions
+    ) {
+        return getEmptyBaselineObject();
+    }
+
+    const { status, versions, date } = baselineData;
+
+    const supportStatus = status || statusTypes.NO_DATA;
+    const badge = messages[supportStatus].badge;
+    const dates = getBaselineDates({ date });
+
+    const parsedVersions = parseObjFromStr(versions);
+    const implementations = getImplementations(parsedVersions);
+
+    const data = {
+        // name,
+        badge,
+        id: null,
+        supportStatus,
+        implementations: getBrowserImplementationList(implementations),
+        dates,
+        showYear: supportStatus === statusTypes.NEWLY && dates.year !== '',
+        specification: null,
     };
 
     return {
